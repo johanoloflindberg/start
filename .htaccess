@@ -1,0 +1,109 @@
+#
+# Require (user|group|valid-user) (username|groupname)
+#
+## BASIC PASSWORD PROTECTION
+AuthName "prompt"
+AuthGroupFile /dev/null
+
+# provide a universal error document
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /error.html [L]
+
+Order Allow,Deny
+Allow from all
+Satisfy Any
+
+
+# instruct browser to download multimedia files
+AddType application/octet-stream .avi
+AddType application/octet-stream .mpg
+AddType application/octet-stream .wmv
+AddType application/octet-stream .mp3
+
+
+
+# cache images and flash content for one month
+<FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf)$">
+Header set Cache-Control "max-age=2592000"
+</FilesMatch>
+
+# cache text, css, and javascript files for one week
+<FilesMatch ".(js|css|pdf|txt)$">
+Header set Cache-Control "max-age=604800"
+</FilesMatch>
+
+# cache html and htm files for one day
+<FilesMatch ".(html|htm)$">
+Header set Cache-Control "max-age=43200"
+</FilesMatch>
+
+# implement minimal caching during site development
+<FilesMatch "\.(flv|gif|jpg|jpeg|png|ico|js|css|pdf|swf|html|htm|txt)$">
+Header set Cache-Control "max-age=5"
+</FilesMatch>
+
+# explicitly disable caching for scripts and other dynamic files
+<FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$">
+Header unset Cache-Control
+</FilesMatch>
+
+
+
+
+# set the default language
+DefaultLanguage sv-SE
+
+# set the default character set
+AddDefaultCharset UTF-8
+
+# add various mime types
+AddType application/x-shockwave-flash .swf
+AddType video/x-flv .flv
+AddType image/x-icon .ico
+
+# send the language tag and default character set
+# AddType 'text/html; charset=UTF-8' html
+AddDefaultCharset UTF-8
+DefaultLanguage en-US
+
+# secure htaccess file
+<Files .htaccess>
+ order allow,deny
+ deny from all
+</Files>
+
+
+
+
+
+
+
+# deny access to evil robots site rippers offline browsers and other nasty scum
+RewriteBase /
+RewriteCond %{HTTP_USER_AGENT} ^Anarchie [OR]
+RewriteCond %{HTTP_USER_AGENT} ^ASPSeek [OR]
+RewriteCond %{HTTP_USER_AGENT} ^attach [OR]
+RewriteCond %{HTTP_USER_AGENT} ^autoemailspider [OR]
+RewriteCond %{HTTP_USER_AGENT} ^Xaldon\ WebSpider [OR]
+RewriteCond %{HTTP_USER_AGENT} ^Xenu [OR]
+RewriteCond %{HTTP_USER_AGENT} ^Zeus.*Webster [OR]
+RewriteCond %{HTTP_USER_AGENT} ^Zeus
+RewriteRule ^.* - [F,L]
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>
+
+deny from 67.228.248.66
+AuthUserFile "/home/dynacord/.htpasswds/public_html/start.webbab.se/passwd"
+deny from 117.169.6.137
+deny from 195.154.211.214
+deny from 67.187.249.212
+deny from 216.58.48.139
+deny from 5.175.129.49
+deny from 69.30.245.58
+deny from 45.72.35.53
+deny from 176.31.29.252
+deny from 62.210.124.236
+deny from 23.95.246.62
